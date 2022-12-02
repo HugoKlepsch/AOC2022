@@ -8,20 +8,29 @@ import (
 
 type Selection int
 
+type GameEndState int
+
 const (
 	SelectionRock Selection = iota
 	SelectionPaper 
 	SelectionScissors
+	GameEndStateWin GameEndState = iota
+	GameEndStateDraw 
+	GameEndStateLoss 
 )
 
 type StrategyGuideLine struct {
 	Opponent Selection
-	Recommendation Selection
+	Recommendation GameEndState
 }
 
 var asciiToSelection map[string]Selection
 
+var asciiToGameEndState map[string]GameEndState
+
 var selectionWinner map[Selection]Selection
+
+var selectionLoser map[Selection]Selection
 
 var selectionPoints map[Selection]int
 
@@ -30,15 +39,24 @@ func main() {
 		"A": SelectionRock,
 		"B": SelectionPaper,
 		"C": SelectionScissors,
-		"X": SelectionRock,
-		"Y": SelectionPaper,
-		"Z": SelectionScissors,
+	}
+
+	asciiToGameEndState = map[string]GameEndState{
+		"X": GameEndStateLoss,
+		"Y": GameEndStateDraw,
+		"Z": GameEndStateWin,
 	}
 
 	selectionWinner = map[Selection]Selection{
 		SelectionRock: SelectionPaper,
 		SelectionPaper: SelectionScissors,
 		SelectionScissors: SelectionRock,
+	}
+
+	selectionLoser = map[Selection]Selection{
+		SelectionRock: SelectionScissors,
+		SelectionPaper: SelectionRock,
+		SelectionScissors: SelectionPaper,
 	}
 
 	selectionPoints = map[Selection]int{
@@ -71,7 +89,7 @@ func main() {
 
 		strategyGuideLine := StrategyGuideLine{
 			Opponent: asciiToSelection[opponent],
-			Recommendation: asciiToSelection[recommendation],
+			Recommendation: asciiToGameEndState[recommendation],
 		}
 		strategyGuide = append(strategyGuide, strategyGuideLine)
 	}
@@ -91,17 +109,29 @@ func main() {
 func calcPointsForRound(strategy StrategyGuideLine) int {
 	score := 0
 
-	if strategy.Opponent == strategy.Recommendation {
+	var selectionForRecommendation Selection
+	if strategy.Recommendation == GameEndStateLoss {
+		// We were told to lose
+		selectionForRecommendation = selectionLoser[strategy.Opponent]
+	} else if strategy.Recommendation == GameEndStateDraw {
+		// We were told to draw
+		selectionForRecommendation = strategy.Opponent
+	} else {
+		// We were told to win
+		selectionForRecommendation = selectionWinner[strategy.Opponent]
+	}
+
+	if strategy.Opponent == selectionForRecommendation {
 		// Draw
 		score += 3
-	} else if selectionWinner[strategy.Opponent] == strategy.Recommendation {
+	} else if selectionWinner[strategy.Opponent] == selectionForRecommendation {
 		// We won
 		score += 6
 	} else {
 		// We lost
 		score += 0 // for completeness
 	}
-	score += selectionPoints[strategy.Recommendation]
+	score += selectionPoints[selectionForRecommendation]
 	
 	return score
 }
