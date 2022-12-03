@@ -10,12 +10,12 @@ type Selection int
 
 const (
 	SelectionRock Selection = iota
-	SelectionPaper 
+	SelectionPaper
 	SelectionScissors
 )
 
 type StrategyGuideLine struct {
-	Opponent Selection
+	Opponent       Selection
 	Recommendation Selection
 }
 
@@ -36,14 +36,14 @@ func main() {
 	}
 
 	selectionWinner = map[Selection]Selection{
-		SelectionRock: SelectionPaper,
-		SelectionPaper: SelectionScissors,
+		SelectionRock:     SelectionPaper,
+		SelectionPaper:    SelectionScissors,
 		SelectionScissors: SelectionRock,
 	}
 
 	selectionPoints = map[Selection]int{
-		SelectionRock: 1,
-		SelectionPaper: 2,
+		SelectionRock:     1,
+		SelectionPaper:    2,
 		SelectionScissors: 3,
 	}
 
@@ -70,7 +70,7 @@ func main() {
 		}
 
 		strategyGuideLine := StrategyGuideLine{
-			Opponent: asciiToSelection[opponent],
+			Opponent:       asciiToSelection[opponent],
 			Recommendation: asciiToSelection[recommendation],
 		}
 		strategyGuide = append(strategyGuide, strategyGuideLine)
@@ -102,6 +102,6 @@ func calcPointsForRound(strategy StrategyGuideLine) int {
 		score += 0 // for completeness
 	}
 	score += selectionPoints[strategy.Recommendation]
-	
+
 	return score
 }

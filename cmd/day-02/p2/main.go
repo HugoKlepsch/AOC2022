@@ -12,15 +12,15 @@ type GameEndState int
 
 const (
 	SelectionRock Selection = iota
-	SelectionPaper 
+	SelectionPaper
 	SelectionScissors
 	GameEndStateWin GameEndState = iota
-	GameEndStateDraw 
-	GameEndStateLoss 
+	GameEndStateDraw
+	GameEndStateLoss
 )
 
 type StrategyGuideLine struct {
-	Opponent Selection
+	Opponent       Selection
 	Recommendation GameEndState
 }
 
@@ -48,20 +48,20 @@ func main() {
 	}
 
 	selectionWinner = map[Selection]Selection{
-		SelectionRock: SelectionPaper,
-		SelectionPaper: SelectionScissors,
+		SelectionRock:     SelectionPaper,
+		SelectionPaper:    SelectionScissors,
 		SelectionScissors: SelectionRock,
 	}
 
 	selectionLoser = map[Selection]Selection{
-		SelectionRock: SelectionScissors,
-		SelectionPaper: SelectionRock,
+		SelectionRock:     SelectionScissors,
+		SelectionPaper:    SelectionRock,
 		SelectionScissors: SelectionPaper,
 	}
 
 	selectionPoints = map[Selection]int{
-		SelectionRock: 1,
-		SelectionPaper: 2,
+		SelectionRock:     1,
+		SelectionPaper:    2,
 		SelectionScissors: 3,
 	}
 
@@ -88,7 +88,7 @@ func main() {
 		}
 
 		strategyGuideLine := StrategyGuideLine{
-			Opponent: asciiToSelection[opponent],
+			Opponent:       asciiToSelection[opponent],
 			Recommendation: asciiToGameEndState[recommendation],
 		}
 		strategyGuide = append(strategyGuide, strategyGuideLine)
@@ -132,6 +132,6 @@ func calcPointsForRound(strategy StrategyGuideLine) int {
 		score += 0 // for completeness
 	}
 	score += selectionPoints[selectionForRecommendation]
-	
+
 	return score
 }
