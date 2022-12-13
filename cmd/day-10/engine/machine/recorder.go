@@ -5,13 +5,13 @@ import "fmt"
 func NewRecorder() *MachineStateRecorder {
 	return &MachineStateRecorder{
 		duringStates: make(map[int64]MachineState),
-		afterStates: make(map[int64]MachineState),
+		afterStates:  make(map[int64]MachineState),
 	}
 }
 
 type MachineStateRecorder struct {
 	duringStates map[int64]MachineState
-	afterStates map[int64]MachineState
+	afterStates  map[int64]MachineState
 }
 
 func (m *MachineStateRecorder) RecordDuring(cycle int64, state MachineState) {

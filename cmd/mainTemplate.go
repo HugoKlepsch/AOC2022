@@ -19,6 +19,7 @@ func main() {
 
 	for fileScanner.Scan() {
 		line := fileScanner.Text()
+		_ = line
 	}
 	if err = fileScanner.Err(); err != nil {
 		fmt.Println(err)

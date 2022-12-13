@@ -4,7 +4,7 @@ func NewMachineState() *MachineState {
 	return &MachineState{
 		X:      1,
 		Cycles: 0,
-	}	
+	}
 }
 
 type MachineState struct {
