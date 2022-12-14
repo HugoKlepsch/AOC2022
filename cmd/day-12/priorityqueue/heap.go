@@ -1,18 +1,18 @@
 package priorityqueue
 
-func NewHeapPriorityQueue[T any](maxHeap bool) *HeapPriorityQueue[T] {
+func NewHeapPriorityQueue[T comparable](maxHeap bool) *HeapPriorityQueue[T] {
 	return &HeapPriorityQueue[T]{
 		maxHeap: maxHeap,
 		heap:    make([]node[T], 0),
 	}
 }
 
-type node[T any] struct {
+type node[T comparable] struct {
 	e        T
 	priority int64
 }
 
-type HeapPriorityQueue[T any] struct {
+type HeapPriorityQueue[T comparable] struct {
 	maxHeap bool
 	heap    []node[T]
 	// Invariant: end is the index after the last element in the heap
@@ -21,6 +21,10 @@ type HeapPriorityQueue[T any] struct {
 
 func (h *HeapPriorityQueue[T]) IsEmpty() bool {
 	return h.end == 0
+}
+
+func (h *HeapPriorityQueue[T]) Size() int {
+	return int(h.end)
 }
 
 func (h *HeapPriorityQueue[T]) Insert(e T, priority int64) {
@@ -54,6 +58,35 @@ func (h *HeapPriorityQueue[T]) Pop() (T, int64, error) {
 
 	node := h.heap[h.end]
 	return node.e, node.priority, nil
+}
+
+func (h *HeapPriorityQueue[T]) SetPriority(e T, newPriority int64) error {
+	for i, n := range h.heap {
+		if n.e == e {
+			oldPriority := n.priority
+			n.priority = newPriority
+			h.heap[i] = n
+			if oldPriority > newPriority {
+				if h.maxHeap {
+					// Smaller priority must bubble down in max heap
+					h.bubbleDown(heapIndex(i))
+				} else {
+					// Smaller priority must bubble up in min heap
+					h.bubbleUp(heapIndex(i))
+				}
+			} else {
+				if h.maxHeap {
+					// Larger priority must bubble up in max heap
+					h.bubbleUp(heapIndex(i))
+				} else {
+					// Larger priority must bubble down in min heap
+					h.bubbleDown(heapIndex(i))
+				}
+			}
+			return nil
+		}
+	}
+	return ErrNotFound
 }
 
 func (h *HeapPriorityQueue[T]) bubbleUp(i heapIndex) {
