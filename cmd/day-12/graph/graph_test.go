@@ -13,7 +13,7 @@ func TestAdjacency(t *testing.T) {
 	//     3---2
 	//
 	// Costs:
-	// (0, 1) = 6
+	// (0, 1) = 7
 	// (0, 4) = 2
 	// (4, 5) = 2
 	// (5, 1) = 4
@@ -24,7 +24,7 @@ func TestAdjacency(t *testing.T) {
 	g := New[struct{}](6)
 
 	// Set adjacencies
-	g.SetEdgeCost(0, 1, 6)
+	g.SetEdgeCost(0, 1, 7)
 	g.SetEdgeCost(0, 4, 2)
 	g.SetEdgeCost(4, 5, 2)
 	g.SetEdgeCost(5, 1, 4)
@@ -33,8 +33,8 @@ func TestAdjacency(t *testing.T) {
 	g.SetEdgeCost(3, 2, 2)
 
 	// line adjacencies
-	assertLineAdjacency([]CostUnit{CostNoEdge, 6, CostNoEdge, CostNoEdge, 2, CostNoEdge}, g.EdgeCosts(0), t)
-	assertLineAdjacency([]CostUnit{6, CostNoEdge, 1, CostNoEdge, CostNoEdge, 4}, g.EdgeCosts(1), t)
+	assertLineAdjacency([]CostUnit{CostNoEdge, 7, CostNoEdge, CostNoEdge, 2, CostNoEdge}, g.EdgeCosts(0), t)
+	assertLineAdjacency([]CostUnit{7, CostNoEdge, 1, CostNoEdge, CostNoEdge, 4}, g.EdgeCosts(1), t)
 	assertLineAdjacency([]CostUnit{CostNoEdge, 1, CostNoEdge, 2, CostNoEdge, 1}, g.EdgeCosts(2), t)
 	assertLineAdjacency([]CostUnit{CostNoEdge, CostNoEdge, 2, CostNoEdge, CostNoEdge, CostNoEdge}, g.EdgeCosts(3), t)
 	assertLineAdjacency([]CostUnit{2, CostNoEdge, CostNoEdge, CostNoEdge, CostNoEdge, 2}, g.EdgeCosts(4), t)
@@ -49,7 +49,7 @@ func TestAdjacency(t *testing.T) {
 		{
 			node:  0,
 			other: 1,
-			cost:  6,
+			cost:  7,
 		},
 		{
 			node:  0,
