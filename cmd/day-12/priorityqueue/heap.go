@@ -1,34 +1,36 @@
 package priorityqueue
 
-func NewHeapPriorityQueue[T comparable](maxHeap bool) *HeapPriorityQueue[T] {
-	return &HeapPriorityQueue[T]{
+import "golang.org/x/exp/constraints"
+
+func NewHeapPriorityQueue[ET comparable, PT constraints.Ordered](maxHeap bool) *HeapPriorityQueue[ET, PT] {
+	return &HeapPriorityQueue[ET, PT]{
 		maxHeap: maxHeap,
-		heap:    make([]node[T], 0),
+		heap:    make([]node[ET, PT], 0),
 	}
 }
 
-type node[T comparable] struct {
-	e        T
-	priority int64
+type node[ET comparable, PT constraints.Ordered] struct {
+	e        ET
+	priority PT
 }
 
-type HeapPriorityQueue[T comparable] struct {
+type HeapPriorityQueue[ET comparable, PT constraints.Ordered] struct {
 	maxHeap bool
-	heap    []node[T]
+	heap    []node[ET, PT]
 	// Invariant: end is the index after the last element in the heap
 	end heapIndex
 }
 
-func (h *HeapPriorityQueue[T]) IsEmpty() bool {
+func (h *HeapPriorityQueue[ET, PT]) IsEmpty() bool {
 	return h.end == 0
 }
 
-func (h *HeapPriorityQueue[T]) Size() int {
+func (h *HeapPriorityQueue[ET, PT]) Size() int {
 	return int(h.end)
 }
 
-func (h *HeapPriorityQueue[T]) Insert(e T, priority int64) {
-	n := node[T]{
+func (h *HeapPriorityQueue[ET, PT]) Insert(e ET, priority PT) {
+	n := node[ET, PT]{
 		e:        e,
 		priority: priority,
 	}
@@ -46,10 +48,11 @@ func (h *HeapPriorityQueue[T]) Insert(e T, priority int64) {
 	h.bubbleUp(nodeIndex)
 }
 
-func (h *HeapPriorityQueue[T]) Pop() (T, int64, error) {
+func (h *HeapPriorityQueue[ET, PT]) Pop() (ET, PT, error) {
 	if h.IsEmpty() {
-		var t T
-		return t, 0, ErrEmpty
+		var et ET
+		var pt PT
+		return et, pt, ErrEmpty
 	}
 
 	h.swap(0, h.end-1)
@@ -60,7 +63,7 @@ func (h *HeapPriorityQueue[T]) Pop() (T, int64, error) {
 	return node.e, node.priority, nil
 }
 
-func (h *HeapPriorityQueue[T]) SetPriority(e T, newPriority int64) error {
+func (h *HeapPriorityQueue[ET, PT]) SetPriority(e ET, newPriority PT) error {
 	for i, n := range h.heap {
 		if n.e == e {
 			oldPriority := n.priority
@@ -89,7 +92,7 @@ func (h *HeapPriorityQueue[T]) SetPriority(e T, newPriority int64) error {
 	return ErrNotFound
 }
 
-func (h *HeapPriorityQueue[T]) bubbleUp(i heapIndex) {
+func (h *HeapPriorityQueue[ET, PT]) bubbleUp(i heapIndex) {
 	// Keep bubbling up the node until it is in heap order
 	// (parent is lower than it in a min-heap, higher in a max-heap)
 	for {
@@ -112,7 +115,7 @@ func (h *HeapPriorityQueue[T]) bubbleUp(i heapIndex) {
 	}
 }
 
-func (h *HeapPriorityQueue[T]) bubbleDown(i heapIndex) {
+func (h *HeapPriorityQueue[ET, PT]) bubbleDown(i heapIndex) {
 	// Keep bubbling the node down until in heap order
 	// Children must be higher than current in a min-heap, and lower in a max-heap.
 	// If above violated, swap with lower child in a min heap, or higher child in max heap. Continue
@@ -161,7 +164,7 @@ func (h *HeapPriorityQueue[T]) bubbleDown(i heapIndex) {
 	}
 }
 
-func (h *HeapPriorityQueue[T]) swap(i, j heapIndex) {
+func (h *HeapPriorityQueue[ET, PT]) swap(i, j heapIndex) {
 	v := h.heap[i]
 	h.heap[i] = h.heap[j]
 	h.heap[j] = v

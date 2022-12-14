@@ -7,9 +7,9 @@ import (
 	"testing"
 )
 
-func testHeap(nItems int, maxHeap bool) *HeapPriorityQueue[float32] {
+func testHeap(nItems int, maxHeap bool) *HeapPriorityQueue[float32, int64] {
 	// New heap, either min or max
-	h := NewHeapPriorityQueue[float32](maxHeap)
+	h := NewHeapPriorityQueue[float32, int64](maxHeap)
 
 	for i := 0; i < nItems; i++ {
 		number := rand.Int() % 2000
@@ -85,7 +85,7 @@ func TestSize(t *testing.T) {
 }
 
 func TestSetPriority_minHeap(t *testing.T) {
-	h := NewHeapPriorityQueue[float32](false)
+	h := NewHeapPriorityQueue[float32, int64](false)
 	for i := 0; i < 5; i++ {
 		h.Insert(float32(i), int64(i))
 	}
@@ -140,7 +140,7 @@ func TestSetPriority_minHeap(t *testing.T) {
 }
 
 func TestSetPriority_maxHeap(t *testing.T) {
-	h := NewHeapPriorityQueue[float32](true)
+	h := NewHeapPriorityQueue[float32, int64](true)
 	for i := 0; i < 5; i++ {
 		h.Insert(float32(i), int64(i))
 	}
@@ -192,4 +192,10 @@ func TestSetPriority_maxHeap(t *testing.T) {
 	if priority != newPriority {
 		t.Errorf("Expected priority %d, got %d\n", newPriority, priority)
 	}
+}
+
+func TestInterface(t *testing.T) {
+	// Ensure that HeapPriorityQueue implements PriorityQueue
+	var p PriorityQueue[float32, int64] = &HeapPriorityQueue[float32, int64]{}
+	_ = p
 }

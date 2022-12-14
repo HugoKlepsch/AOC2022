@@ -1,16 +1,20 @@
 package priorityqueue
 
-import "errors"
+import (
+	"errors"
+
+	"golang.org/x/exp/constraints"
+)
 
 var (
 	ErrEmpty    = errors.New("priority queue empty")
 	ErrNotFound = errors.New("element not found")
 )
 
-type PriorityQueue[T any] interface {
+type PriorityQueue[ET comparable, PT constraints.Ordered] interface {
 	IsEmpty() bool
 	Size() int
-	Insert(e T, priority int64)
-	Pop() (e T, priority int64, err error)
-	SetPriority(e T, newPriority int64) error
+	Insert(e ET, priority PT)
+	Pop() (e ET, priority PT, err error)
+	SetPriority(e ET, newPriority PT) error
 }
