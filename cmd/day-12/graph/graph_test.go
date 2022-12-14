@@ -21,24 +21,24 @@ func TestAdjacency(t *testing.T) {
 	// (1, 2) = 1
 	// (3, 2) = 2
 
-	m := New[struct{}](6)
+	g := New[struct{}](6)
 
 	// Set adjacencies
-	m.SetEdgeCost(0, 1, 6)
-	m.SetEdgeCost(0, 4, 2)
-	m.SetEdgeCost(4, 5, 2)
-	m.SetEdgeCost(5, 1, 4)
-	m.SetEdgeCost(5, 2, 1)
-	m.SetEdgeCost(1, 2, 1)
-	m.SetEdgeCost(3, 2, 2)
+	g.SetEdgeCost(0, 1, 6)
+	g.SetEdgeCost(0, 4, 2)
+	g.SetEdgeCost(4, 5, 2)
+	g.SetEdgeCost(5, 1, 4)
+	g.SetEdgeCost(5, 2, 1)
+	g.SetEdgeCost(1, 2, 1)
+	g.SetEdgeCost(3, 2, 2)
 
 	// line adjacencies
-	assertLineAdjacency([]CostUnit{CostNoEdge, 6, CostNoEdge, CostNoEdge, 2, CostNoEdge}, m.EdgeCosts(0), t)
-	assertLineAdjacency([]CostUnit{6, CostNoEdge, 1, CostNoEdge, CostNoEdge, 4}, m.EdgeCosts(1), t)
-	assertLineAdjacency([]CostUnit{CostNoEdge, 1, CostNoEdge, 2, CostNoEdge, 1}, m.EdgeCosts(2), t)
-	assertLineAdjacency([]CostUnit{CostNoEdge, CostNoEdge, 2, CostNoEdge, CostNoEdge, CostNoEdge}, m.EdgeCosts(3), t)
-	assertLineAdjacency([]CostUnit{2, CostNoEdge, CostNoEdge, CostNoEdge, CostNoEdge, 2}, m.EdgeCosts(4), t)
-	assertLineAdjacency([]CostUnit{CostNoEdge, 4, 1, CostNoEdge, 2, CostNoEdge}, m.EdgeCosts(5), t)
+	assertLineAdjacency([]CostUnit{CostNoEdge, 6, CostNoEdge, CostNoEdge, 2, CostNoEdge}, g.EdgeCosts(0), t)
+	assertLineAdjacency([]CostUnit{6, CostNoEdge, 1, CostNoEdge, CostNoEdge, 4}, g.EdgeCosts(1), t)
+	assertLineAdjacency([]CostUnit{CostNoEdge, 1, CostNoEdge, 2, CostNoEdge, 1}, g.EdgeCosts(2), t)
+	assertLineAdjacency([]CostUnit{CostNoEdge, CostNoEdge, 2, CostNoEdge, CostNoEdge, CostNoEdge}, g.EdgeCosts(3), t)
+	assertLineAdjacency([]CostUnit{2, CostNoEdge, CostNoEdge, CostNoEdge, CostNoEdge, 2}, g.EdgeCosts(4), t)
+	assertLineAdjacency([]CostUnit{CostNoEdge, 4, 1, CostNoEdge, 2, CostNoEdge}, g.EdgeCosts(5), t)
 
 	// Exact adjacency
 	type TestCase struct {
@@ -73,37 +73,38 @@ func TestAdjacency(t *testing.T) {
 		},
 	}
 	for _, testCase := range testCases {
-		actual := m.EdgeCost(testCase.node, testCase.other)
+		actual := g.EdgeCost(testCase.node, testCase.other)
 		if testCase.cost != actual {
-			t.Fatalf("EdgeCost(%d, %d) -> %f, expected %f", testCase.node, testCase.other, actual, testCase.cost)
+			t.Errorf("EdgeCost(%d, %d) -> %f, expected %f", testCase.node, testCase.other, actual, testCase.cost)
 		}
 	}
 }
 
 func assertLineAdjacency(expected, actual []CostUnit, t *testing.T) {
 	if len(expected) != len(actual) {
-		t.Fail()
+		t.Errorf("invalid number of edges")
 	}
 	for i := range expected {
 		if expected[i] != actual[i] {
-			t.Fail()
+			t.Errorf("cost to (%d): %f, expected %f\n", i, actual[i], expected[i])
 		}
 	}
 }
 
 func TestSetGet(t *testing.T) {
-	m := New[float64](6)
+	g := New[float64](6)
 
 	// Set values
 	for i := 0; i < 6; i++ {
-		m.Set(NodeRef(i), float64(i+10))
+		g.Set(NodeRef(i), float64(i+10))
 	}
 
 	// Get values
 	for i := 0; i < 6; i++ {
-		actual := m.Get(NodeRef(i))
-		if actual != float64(i+10) {
-			t.Fail()
+		actual := g.Get(NodeRef(i))
+		expected := float64(i + 10)
+		if actual != expected {
+			t.Errorf("get (%d): %f, expected %f\n", i, actual, expected)
 		}
 	}
 }
