@@ -4,6 +4,13 @@ import (
 	"golang.org/x/exp/constraints"
 )
 
+type EdgeType int
+
+const (
+	EdgeTypeDirected EdgeType = iota
+	EdgeTypeBiDirectional
+)
+
 func New[T any, CostUnit constraints.Ordered](expectedSize int, costNoEdge CostUnit) *Graph[T, CostUnit] {
 	g := Graph[T, CostUnit]{
 		nodes:      make([]T, expectedSize),
@@ -58,9 +65,11 @@ func (g *Graph[T, CostUnit]) AddNode(e T) NodeRef {
 	return NodeRef(newNumNodes - 1)
 }
 
-func (g *Graph[T, CostUnit]) SetEdgeCost(n, other NodeRef, cost CostUnit) {
+func (g *Graph[T, CostUnit]) SetEdgeCost(n, other NodeRef, cost CostUnit, edgeType EdgeType) {
 	g.edgeMatrix[n][other] = cost
-	g.edgeMatrix[other][n] = cost
+	if edgeType == EdgeTypeBiDirectional {
+		g.edgeMatrix[other][n] = cost
+	}
 }
 
 func (g *Graph[T, CostUnit]) EdgeCosts(n NodeRef) []CostUnit {

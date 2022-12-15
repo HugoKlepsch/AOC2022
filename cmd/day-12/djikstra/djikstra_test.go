@@ -30,13 +30,13 @@ func testGraph() *graph.Graph[struct{}, int8] {
 	g := graph.New[struct{}, int8](6, math.MaxInt8)
 
 	// Set adjacencies
-	g.SetEdgeCost(0, 1, 7)
-	g.SetEdgeCost(0, 4, 2)
-	g.SetEdgeCost(4, 5, 2)
-	g.SetEdgeCost(5, 1, 4)
-	g.SetEdgeCost(5, 2, 1)
-	g.SetEdgeCost(1, 2, 1)
-	g.SetEdgeCost(3, 2, 2)
+	g.SetEdgeCost(0, 1, 7, graph.EdgeTypeBiDirectional)
+	g.SetEdgeCost(0, 4, 2, graph.EdgeTypeBiDirectional)
+	g.SetEdgeCost(4, 5, 2, graph.EdgeTypeBiDirectional)
+	g.SetEdgeCost(5, 1, 4, graph.EdgeTypeBiDirectional)
+	g.SetEdgeCost(5, 2, 1, graph.EdgeTypeBiDirectional)
+	g.SetEdgeCost(1, 2, 1, graph.EdgeTypeBiDirectional)
+	g.SetEdgeCost(3, 2, 2, graph.EdgeTypeBiDirectional)
 
 	return g
 }

@@ -31,13 +31,13 @@ func TestAdjacency(t *testing.T) {
 	g := New[struct{}, CostUnit](6, math.MaxInt8)
 
 	// Set adjacencies
-	g.SetEdgeCost(0, 1, 7)
-	g.SetEdgeCost(0, 4, 2)
-	g.SetEdgeCost(4, 5, 2)
-	g.SetEdgeCost(5, 1, 4)
-	g.SetEdgeCost(5, 2, 1)
-	g.SetEdgeCost(1, 2, 1)
-	g.SetEdgeCost(3, 2, 2)
+	g.SetEdgeCost(0, 1, 7, EdgeTypeBiDirectional)
+	g.SetEdgeCost(0, 4, 2, EdgeTypeBiDirectional)
+	g.SetEdgeCost(4, 5, 2, EdgeTypeBiDirectional)
+	g.SetEdgeCost(5, 1, 4, EdgeTypeBiDirectional)
+	g.SetEdgeCost(5, 2, 1, EdgeTypeBiDirectional)
+	g.SetEdgeCost(1, 2, 1, EdgeTypeBiDirectional)
+	g.SetEdgeCost(3, 2, 2, EdgeTypeBiDirectional)
 
 	// line adjacencies
 	assertLineAdjacency([]CostUnit{g.CostNoEdge, 7, g.CostNoEdge, g.CostNoEdge, 2, g.CostNoEdge}, g.EdgeCosts(0), t)
