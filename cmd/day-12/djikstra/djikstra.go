@@ -52,6 +52,10 @@ func Djikstra[T any, CostUnit constraints.Ordered](
 		if err != nil {
 			return nil, err
 		}
+		if d.Distances[node] == infiniteCost {
+			// This node is not accessible from the start, so don't try to path anywhere from it
+			continue
+		}
 		edgeCosts := g.EdgeCosts(node)
 		for neighbor, edgeCost := range edgeCosts {
 			if edgeCost != g.CostNoEdge {
